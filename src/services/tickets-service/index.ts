@@ -2,6 +2,7 @@ import { notFoundError } from "@/errors";
 import ticketRepository from "@/repositories/ticket-repository";
 import enrollmentRepository from "@/repositories/enrollment-repository";
 import { TicketStatus } from "@prisma/client";
+import { CreateTicketTypeParams } from "@/repositories/ticket-repository";
 
 async function getTicketTypes() {
   const ticketTypes = await ticketRepository.findTicketTypes();
@@ -44,10 +45,22 @@ async function createTicket(userId: number, ticketTypeId: number) {
   return ticket;
 }
 
+async function createTicketType(ticketType: CreateTicketTypeParams, userId: number) {
+  const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
+  if (!enrollment) {
+    throw notFoundError();
+  }
+
+  const ticketTypeReturn = await ticketRepository.createTicketType(ticketType);
+
+  return ticketTypeReturn;
+}
+
 const ticketService = {
   getTicketTypes,
   getTicketByUserId,
-  createTicket
+  createTicket,
+  createTicketType
 };
 
 export default ticketService;
