@@ -13,6 +13,18 @@ export async function getTicketTypes(req: AuthenticatedRequest, res: Response) {
   }
 }
 
+export async function postTicketType(req: AuthenticatedRequest, res: Response) {
+  const { userId } = req;
+  const ticketType  = req.body;
+  try {
+    const ticketTypes = await ticketService.createTicketType(ticketType, userId);
+    console.log(ticketTypes);
+    return res.status(httpStatus.CREATED).send(ticketTypes);
+  } catch (error) {
+    return res.sendStatus(httpStatus.NO_CONTENT);
+  }
+}
+
 export async function getTickets(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
 

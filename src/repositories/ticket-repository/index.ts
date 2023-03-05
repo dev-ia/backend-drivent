@@ -1,5 +1,5 @@
 import { prisma } from "@/config";
-import { Ticket, TicketStatus } from "@prisma/client";
+import { Ticket, TicketStatus, TicketType } from "@prisma/client";
 
 async function findTicketTypes() {
   return prisma.ticketType.findMany();
@@ -45,6 +45,14 @@ async function createTicket(ticket: CreateTicketParams) {
   });
 }
 
+async function createTicketType(ticketType: CreateTicketTypeParams) {
+  return prisma.ticketType.create({
+    data: {
+      ...ticketType,
+    }
+  });
+}
+
 async function ticketProcessPayment(ticketId: number) {
   return prisma.ticket.update({
     where: {
@@ -57,11 +65,13 @@ async function ticketProcessPayment(ticketId: number) {
 }
 
 export type CreateTicketParams = Omit<Ticket, "id" | "createdAt" | "updatedAt">
+export type CreateTicketTypeParams = Omit<TicketType, "id" | "createdAt" | "updatedAt">
 
 const ticketRepository = {
   findTicketTypes,
   findTicketByEnrollmentId,
   createTicket,
+  createTicketType,
   findTickeyById,
   findTickeWithTypeById,
   ticketProcessPayment,
