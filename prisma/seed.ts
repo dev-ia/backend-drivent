@@ -1,5 +1,6 @@
-import { PrismaClient } from "@prisma/client";
-import dayjs from "dayjs";
+import { PrismaClient } from '@prisma/client';
+import dayjs from 'dayjs';
+import { arrayBuffer } from 'stream/consumers';
 const prisma = new PrismaClient();
 
 async function main() {
@@ -7,45 +8,44 @@ async function main() {
   if (!event) {
     event = await prisma.event.create({
       data: {
-        title: "Driven.t",
-        logoImageUrl: "https://files.driveneducation.com.br/images/logo-rounded.png",
-        backgroundImageUrl: "linear-gradient(to right, #FA4098, #FFD77F)",
+        title: 'Driven.t',
+        logoImageUrl: 'https://files.driveneducation.com.br/images/logo-rounded.png',
+        backgroundImageUrl: 'linear-gradient(to right, #FA4098, #FFD77F)',
         startsAt: dayjs().toDate(),
-        endsAt: dayjs().add(21, "days").toDate(),
+        endsAt: dayjs().add(21, 'days').toDate(),
       },
     });
   }
 
-  const ticketCount = await prisma.ticketType.count();
-  if(ticketCount != 3){
+  async function deleteOnCascadeAllTicketTypes() {
+    await prisma.ticket.deleteMany({});
     await prisma.ticketType.deleteMany({});
-    const remoteTIcket = await prisma.ticketType.create({
-      data: {
-        name: "online",
-        price: 100,
-        isRemote: true,
-        includesHotel: false,
-      },
+    const ticketTypeArray = await prisma.ticketType.createMany({
+      data: [
+        {
+          name: 'online',
+          price: 150,
+          isRemote: true,
+          includesHotel: false,
+        },
+        {
+          name: 'presencial sem hotel',
+          price: 250,
+          isRemote: false,
+          includesHotel: true,
+        },
+        {
+          name: 'presencial com hotel',
+          price: 450,
+          isRemote: false,
+          includesHotel: true,
+        },
+      ],
     });
-    const ticketWithoutHotel = await prisma.ticketType.create({
-      data: {
-        name: "remoto sem hotel",
-        price: 250,
-        isRemote: false,
-        includesHotel: false,
-      },
-    });
-    const ticketWithHotel = await prisma.ticketType.create({
-      data: {
-        name: "remoto com hotel",
-        price: 600,
-        isRemote: false,
-        includesHotel: true,
-      },
-    });
-
-    console.log(remoteTIcket, ticketWithoutHotel, ticketWithHotel);
+    console.log({ ticketTypeArray });
   }
+
+  deleteOnCascadeAllTicketTypes();
   console.log({ event });
 }
 
