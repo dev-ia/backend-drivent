@@ -16,6 +16,36 @@ async function main() {
     });
   }
 
+  const ticketCount = await prisma.ticketType.count();
+  if(ticketCount != 3){
+    await prisma.ticketType.deleteMany({});
+    const remoteTIcket = await prisma.ticketType.create({
+      data: {
+        name: "online",
+        price: 100,
+        isRemote: true,
+        includesHotel: false,
+      },
+    });
+    const ticketWithoutHotel = await prisma.ticketType.create({
+      data: {
+        name: "remoto sem hotel",
+        price: 250,
+        isRemote: false,
+        includesHotel: false,
+      },
+    });
+    const ticketWithHotel = await prisma.ticketType.create({
+      data: {
+        name: "remoto com hotel",
+        price: 600,
+        isRemote: false,
+        includesHotel: true,
+      },
+    });
+
+    console.log(remoteTIcket, ticketWithoutHotel, ticketWithHotel);
+  }
   console.log({ event });
 }
 
