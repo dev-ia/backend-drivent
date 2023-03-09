@@ -32,7 +32,7 @@ async function main() {
           name: 'presencial sem hotel',
           price: 250,
           isRemote: false,
-          includesHotel: true,
+          includesHotel: false,
         },
         {
           name: 'presencial com hotel',
