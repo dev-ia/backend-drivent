@@ -46,7 +46,6 @@ async function main() {
   }
 
   deleteOnCascadeAllTicketTypes();
-
   console.log({ event });
 }
 
