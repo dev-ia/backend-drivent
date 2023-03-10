@@ -2,7 +2,6 @@ import { AuthenticatedRequest } from '@/middlewares';
 import ticketService from '@/services/tickets-service';
 import { Response } from 'express';
 import httpStatus from 'http-status';
-import { useParams } from 'react-router-dom';
 
 export async function getTicketTypes(req: AuthenticatedRequest, res: Response) {
   try {
