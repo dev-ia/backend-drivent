@@ -1,7 +1,8 @@
-import { AuthenticatedRequest } from "@/middlewares";
-import ticketService from "@/services/tickets-service";
-import { Response } from "express";
-import httpStatus from "http-status";
+import { AuthenticatedRequest } from '@/middlewares';
+import ticketService from '@/services/tickets-service';
+import { Response } from 'express';
+import httpStatus from 'http-status';
+import { useParams } from 'react-router-dom';
 
 export async function getTicketTypes(req: AuthenticatedRequest, res: Response) {
   try {
@@ -15,7 +16,7 @@ export async function getTicketTypes(req: AuthenticatedRequest, res: Response) {
 
 export async function postTicketType(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
-  const ticketType  = req.body;
+  const ticketType = req.body;
   try {
     const ticketTypes = await ticketService.createTicketType(ticketType, userId);
     console.log(ticketTypes);
@@ -32,6 +33,19 @@ export async function getTickets(req: AuthenticatedRequest, res: Response) {
     const ticketTypes = await ticketService.getTicketByUserId(userId);
 
     return res.status(httpStatus.OK).send(ticketTypes);
+  } catch (error) {
+    return res.sendStatus(httpStatus.NOT_FOUND);
+  }
+}
+
+export async function getTicketsById(req: AuthenticatedRequest, res: Response) {
+  const { userId } = req;
+  const ticketId = Number(req.params.ticketId);
+
+  try {
+    const ticketType = await ticketService.getTicketByTicketId(ticketId, userId);
+
+    return res.status(httpStatus.OK).send(ticketType);
   } catch (error) {
     return res.sendStatus(httpStatus.NOT_FOUND);
   }
@@ -55,4 +69,3 @@ export async function createTicket(req: AuthenticatedRequest, res: Response) {
     return res.sendStatus(httpStatus.NOT_FOUND);
   }
 }
-
