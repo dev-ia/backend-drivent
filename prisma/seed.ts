@@ -112,7 +112,7 @@ async function main() {
   });
 
   const seed = async () => {
-    const dates = [new Date('2022-04-01'), new Date('2022-04-02'), new Date('2022-04-03')];
+    const dates = [new Date('2022-04-01'), new Date('2022-04-01'), new Date('2022-04-01')];
 
     for (let i = 0; i < dates.length; i++) {
       const date = dates[i];
