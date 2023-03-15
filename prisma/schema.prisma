@@ -11,14 +11,15 @@ datasource db {
 }
 
 model User {
-  id         Int          @id @default(autoincrement())
-  email      String       @unique @db.VarChar(255)
-  password   String       @db.VarChar(255)
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
+  id         Int               @id @default(autoincrement())
+  email      String            @unique @db.VarChar(255)
+  password   String            @db.VarChar(255)
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
   Session    Session[]
   Enrollment Enrollment[]
   Booking    Booking[]
+  bookings   BookingActivity[]
 }
 
 model Session {
@@ -137,4 +138,29 @@ model Booking {
   roomId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+// Define the models
+model Local {
+  id         Int          @id @default(autoincrement())
+  name       String
+  activities Activities[]
+}
+
+model Activities {
+  id               Int               @id @default(autoincrement())
+  name             String
+  data             DateTime
+  hour_of_activity DateTime
+  local            Local             @relation(fields: [local_id], references: [id])
+  local_id         Int
+  bookings         BookingActivity[]
+}
+
+model BookingActivity {
+  id          Int        @id @default(autoincrement())
+  user        User       @relation(fields: [user_id], references: [id])
+  user_id     Int
+  activity    Activities @relation(fields: [activity_id], references: [id])
+  activity_id Int
 }
