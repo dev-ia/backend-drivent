@@ -1,3 +1,4 @@
+import { redis } from '@/app';
 import { notFoundError } from "@/errors";
 import eventRepository from "@/repositories/event-repository";
 import { exclude } from "@/utils/prisma-utils";
@@ -24,9 +25,23 @@ async function isCurrentEventActive(): Promise<boolean> {
   return now.isAfter(eventStartsAt) && now.isBefore(eventEndsAt);
 }
 
+async function insertEventIntoRedis() {
+  const event = await getFirstEvent();
+
+  const cacheKey = 'event';
+  const cachedEvent = await redis.get(cacheKey);
+  if (cachedEvent) {
+    return JSON.parse(cachedEvent);
+  }
+
+  await redis.set(cacheKey, JSON.stringify(event))
+  return event
+}
+
 const eventsService = {
   getFirstEvent,
   isCurrentEventActive,
+  insertEventIntoRedis,
 };
 
 export default eventsService;
