@@ -4,8 +4,13 @@ import express, { Express } from "express";
 import cors from "cors";
 
 import { loadEnv, connectDb, disconnectDB } from "@/config";
-
 loadEnv();
+
+import { createClient } from '@redis/client';
+export const redis = createClient({
+  url: process.env.REDIS_URL
+})
+
 
 import { handleApplicationErrors } from "@/middlewares";
 import {
