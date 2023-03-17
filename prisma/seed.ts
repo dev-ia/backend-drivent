@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { arrayBuffer } from 'stream/consumers';
 const prisma = new PrismaClient();
 import faker from '@faker-js/faker';
-import bcrypt from "bcrypt";
+import bcrypt from 'bcrypt';
 
 async function main() {
   let event = await prisma.event.findFirst();
@@ -58,16 +58,16 @@ async function main() {
         data: {
           name: faker.name.findName(),
           image: faker.image.imageUrl(),
-        }
+        },
       });
 
       for (let j = 0; j < 16; j++) {
-        const capacity = faker.datatype.number({min: 1, max: 3});
+        const capacity = faker.datatype.number({ min: 1, max: 3 });
         let name = '';
 
-        if(capacity === 1){
+        if (capacity === 1) {
           name = 'single';
-        } else if (capacity === 2){
+        } else if (capacity === 2) {
           name = 'double';
         } else {
           name = 'triple';
@@ -78,7 +78,7 @@ async function main() {
             name,
             capacity,
             hotelId: hotel.id,
-          }
+          },
         });
 
         const bookingCout = faker.datatype.number({ min: 0, max: capacity });
@@ -98,16 +98,74 @@ async function main() {
             data: {
               userId: user.id,
               roomId: room.id,
-            }
+            },
           });
         }
       }
     }
   }
 
+  //creating datas to activities, local and bookingActivities - SPRINT 3
+
+  const locals = await prisma.local.createMany({
+    data: [{ name: 'Auditório Principal' }, { name: 'Auditório Lateral' }, { name: 'Sala de Workshop' }],
+  });
+
+  const seed = async () => {
+    const dates = [new Date('2022-04-01'), new Date('2022-04-01'), new Date('2022-04-01')];
+
+    for (let i = 0; i < dates.length; i++) {
+      const date = dates[i];
+      await prisma.activities.create({
+        data: {
+          name: `Activity ${i + 1}`,
+          data: date,
+          hour_of_activity: new Date('2022-03-16T12:00:00Z'),
+          local: {
+            connect: { id: 1 },
+          },
+        },
+      });
+    }
+
+    //await prisma.$disconnect();
+  };
+  seed();
+
+  // const activities = await prisma.activities.createMany({
+  //   data: [
+  //     {
+  //       name: 'Yoga Class',
+  //       data: new Date('2022-04-01'),
+  //       hour_of_activity: new Date('2023-03-16T10:00:00Z'),
+  //       local_id: 1,
+  //     },
+  //     {
+  //       name: 'Basketball Game',
+  //       data: new Date(),
+  //       hour_of_activity: new Date('2023-03-18T14:00:00Z'),
+  //       local_id: 2,
+  //     },
+  //     {
+  //       name: 'Dance Party',
+  //       data: new Date(),
+  //       hour_of_activity: new Date('2023-03-20T20:00:00Z'),
+  //       local_id: 3,
+  //     },
+  //   ],
+  // });
+
+  const bookingActivities = await prisma.bookingActivity.createMany({
+    data: [
+      { user_id: 1, activity_id: 1 },
+      { user_id: 1, activity_id: 2 },
+      { user_id: 1, activity_id: 3 },
+    ],
+  });
+
   deleteOnCascadeAllTicketTypes();
   createHotelsWithRoomsAndBookings();
-  console.log({ event });
+  console.log({ event, locals, bookingActivities });
 }
 
 main()
