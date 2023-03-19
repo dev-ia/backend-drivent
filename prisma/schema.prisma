@@ -154,6 +154,7 @@ model Activities {
   hour_of_activity DateTime
   local            Local             @relation(fields: [local_id], references: [id])
   local_id         Int
+  capacity         Int               @default(0)
   bookings         BookingActivity[]
 }
 
