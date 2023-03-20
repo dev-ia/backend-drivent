@@ -130,3 +130,92 @@ There are several things you need to do when you add new ENV VARIABLES:
 - Add them to your docker-compose.yml file (just the name, not the value). Only envs listed in the environment section will be exposed to your docker container.
 - Add them (prod version) to your github repo secrets. They will be used to generate the `.env` file on deploy.
 - Add them (prod version) to test.yml file on .github/workflows/test.yml.
+
+<br>
+<br>
+<br>
+
+# Chamando as rotas
+
+
+<h2><b>ROTA /activities/:data</b> </h2>
+ <b>- GET: /activities/2022-04-01</b>
+ <br>
+ <i>Formato da data 2022-04-01
+(Retorna as atividades separadas por local, com os enrollments já(buscando em bookings)</i>
+<br>
+<br>
+
+<b>Formato do retorno: </b>
+
+> [ { local{}, activities[ {}, {} ] } ...]
+
+```
+[
+   {
+      {
+    "local": {
+      "id": 1,
+      "name": "Gym"
+    },
+    "activities": [
+      {
+        "id": 8,
+        "name": "Activity 2",
+        "data": "2022-04-01T00:00:00.000Z",
+        "hour_of_activity": "2022-03-16T12:00:00.000Z",
+        "local_id": 1,
+        "capacity": 13,
+        "enrollment": 3
+      },
+      {
+        "id": 7,
+        "name": "Activity 1",
+        "data": "2022-04-01T00:00:00.000Z",
+        "hour_of_activity": "2022-03-16T12:00:00.000Z",
+        "local_id": 1,
+        "capacity": 11,
+        "enrollment": 0
+      }
+      ]
+   }
+]
+```
+<br>
+<br>
+<br>
+<br>
+<h2><b>ROTA /bookingActivities</b></h2>
+
+- GET: http://localhost:4000/bookingActivities
+<br>
+<br>
+
+
+<b>RETORNO</b>
+
+```
+[
+  {
+    "activity_id": 6,
+    "enrollments": 1
+  },
+  {
+    "activity_id": 2,
+    "enrollments": 1
+  },
+  {
+    "activity_id": 1,
+    "enrollments": 4
+  },
+  {
+    "activity_id": 8,
+    "enrollments": 3
+  }
+]
+```
+
+
+
+
+

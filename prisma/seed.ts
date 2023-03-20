@@ -4,6 +4,7 @@ import { arrayBuffer } from 'stream/consumers';
 const prisma = new PrismaClient();
 import faker from '@faker-js/faker';
 import bcrypt from 'bcrypt';
+import { randomInt } from 'crypto';
 
 async function main() {
   let event = await prisma.event.findFirst();
@@ -124,6 +125,7 @@ async function main() {
           local: {
             connect: { id: 1 },
           },
+          capacity: randomInt(33),
         },
       });
     }

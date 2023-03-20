@@ -24,7 +24,10 @@ import {
   hotelsRouter,
   bookingRouter,
   activitiesRouter,
+  bookingActivitiesRouter,
 } from '@/routers';
+//import bookingActivitiesRepository from './repositories/bookingActivities-repository';
+// import { bookingActivitiesRouter } from './routers/bookingActitivities-router';
 
 const app = express();
 app
@@ -40,6 +43,7 @@ app
   .use('/hotels', hotelsRouter)
   .use('/booking', bookingRouter)
   .use('/activities', activitiesRouter)
+  .use('/bookingActivities', bookingActivitiesRouter)
   .use(handleApplicationErrors);
 
 export function init(): Promise<Express> {

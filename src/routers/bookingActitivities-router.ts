@@ -5,9 +5,9 @@ import { validateBody } from '@/middlewares';
 import { signInSchema } from '@/schemas';
 import { Router } from 'express';
 
-const activitiesRouter = Router();
+const bookingActivitiesRouter = Router();
 // authenticationRouter.get('/activities/:date', validateBody(signInSchema), singInPost);
-activitiesRouter.get('/:date', getActivitiesByDate);
-//activitiesRouter.get('/:id', getBookingActivitiesById);
+//activitiesRouter.get('/:date', getActivitiesByDate);
+bookingActivitiesRouter.get('/', getBookingActivitiesById);
 
-export { activitiesRouter };
+export { bookingActivitiesRouter };
